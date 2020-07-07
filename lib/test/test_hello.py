@@ -31,12 +31,12 @@ def _output_types(cls: type) -> typing.Dict[str, typing.Tuple[type, bool]]:
         get_args = typing.get_args
     else:
         def get_origin(tp):
-            if isinstance(tp, typing._GenericAlias):
+            if hasattr(tp, "__origin__"):
                 return tp.__origin__
             return None
 
         def get_args(tp):
-            if isinstance(tp, typing._GenericAlias):
+            if hasattr(tp, "__args__"):
                 return tp.__args__
             return ()
 
