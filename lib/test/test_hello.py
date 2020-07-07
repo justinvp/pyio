@@ -44,11 +44,11 @@ def _output_types(cls: type) -> typing.Dict[str, typing.Tuple[type, bool]]:
         # TODO need to check to see if it is an output dict type
         # TODO need to handle Optional
         origin = get_origin(val)
-        if origin is list:
+        if origin is list or origin is typing.List:
             args = get_args(val)
             if len(args) > 0:
                 return (args[0], True)
-        elif origin is dict:
+        elif origin is dict or origin is typing.Dict:
             args = get_args(val)
             if len(args) > 1:
                 assert args[0] is str
