@@ -67,20 +67,29 @@ def _output_types(cls: type) -> typing.Dict[str, typing.Tuple[type, bool]]:
             return (val, False)
 
     r = {}
-    for key, value in typing.get_type_hints(cls).items():
+    for k, v in typing.get_type_hints(cls).items():
         # Skip id, urn, and keys that start with an underscore.
-        if key in ["id", "urn"] or key.startswith("_"):
+        if k in ["id", "urn"] or k.startswith("_"):
             continue
 
         # TODO skip non-outputs
 
-        if get_origin(value) is pulumi.Output:
-            args = get_args(value)
+        if get_origin(v) is pulumi.Output:
+            args = get_args(v)
             assert len(args) == 1
             result_value = get_result_value(args[0])
             if result_value is not None:
-                r[key] = result_value
+                r[k] = result_value
     return r
+
+
+class Property:
+    def __init__(self, name: str) -> None:
+        self.name = name
+        pass
+
+def property(name: str):
+    return Property(name)
 
 
 class BucketAccelerationStatusArgs(dict):
@@ -116,7 +125,7 @@ class Bucket(pulumi.CustomResource):
             dict(),
             None)
 
-class TestHello(unittest.TestCase):
+class TestOutputType(unittest.TestCase):
     def test_output_types(self):
         self.assertEqual(_output_types(Bucket), {
             "a0": (BucketAccelerationStatusArgs, False),
@@ -137,4 +146,6 @@ class TestHello(unittest.TestCase):
             "w1": (BucketWebsite, False),
             "w2": (BucketWebsite, True),
         })
+
+
 
