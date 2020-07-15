@@ -101,7 +101,7 @@ def input_type(cls: typing.Type[T]) -> typing.Type[T]:
         setattr(cls, _TO_DICT, _to_dict)
     return cls
 
-import dataclasses
+#import dataclasses
 
 #@dataclasses.dataclass
 @input_type
